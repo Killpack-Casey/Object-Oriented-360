@@ -10,13 +10,13 @@ import java.util.Scanner;
 
 
 //nasty path with the things I'm using
-//import org.json.simple.JSONOBJECT;
+//import org.json.JSONObject;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-//nasty path I found when you type two words in for one variable input, it dissallows you to put in the password it makes the last
+//nasty path I found when you type two words in for one variable input, it disallows you to put in the password it makes the last
 // word your password and the first word the username in a key pair
 
 public class myJson {
@@ -24,19 +24,22 @@ public class myJson {
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
 		
+		//create variables for input
 		String username;
 		String password;
 		String root = "Casey";
 		
+		//ask user for input
 		System.out.println("Please enter your Username");
 		username = scanner.next();
 		
 		System.out.println("Please enter your Password");
 		password = scanner.next();
 		
+		//call method to begin creating some JSON
 		happyJson(username, password, root);
 		
-		//nasty path
+		//nasty path: calls method to begin creating some JSON
 		//nastyJson(username, password, root);
 		
 	}
@@ -45,64 +48,68 @@ public class myJson {
 public static void nastyJson(String username, String password, String root){
 		
 		//create a JSON object
-		JSONObject cred = new JSONObject();
+		JSONObject branch = new JSONObject();
 		
-		//Add String keys and value pairs, which are my variables that hold user input
-		cred.put("password", password);
-		cred.put("username", username);
+		//Add String keys and value pairs, which are my variables that hold user input to branch object
+		branch.put("password", password);
+		branch.put("username", username);
 		
-		//create a JSON Array and add the object cred with its key values to it
-		JSONArray security = new JSONArray();
-		security.add(cred);
+		//create a JSON Array and add the object branch with its key values to it
+		JSONArray array = new JSONArray();
+		array.add(branch);
 		
 		//nasty path
-		//add array to the cred object: because the array has already added the cred object, cred object cannot add the array
-		cred.put("security", security);
+		//add array to the branch object: because the array has already added the branch object, branch object cannot add the array
+		branch.put("array", array);
 
 		//prints out json contents
-		System.out.println(cred.toString());
+		System.out.println(branch.toString());
 	}
 
 //happy path
 public static void happyJson(String username, String password, String root){
 	
 			//Create a JSON object
-			JSONObject credential = new JSONObject();
+			JSONObject master = new JSONObject();
 			
-			//add key value pairs to credential object
-			credential.put("root", root);
+			//add key value pairs to master object
+			master.put("root", root);
 			
 			//create a JSON object
-			JSONObject cred = new JSONObject();
+			JSONObject branch = new JSONObject();
 			
 			//Add String keys and value pairs, which are my variables that hold user input
-			cred.put("password", password);
-			cred.put("username", username);
+			branch.put("password", password);
+			branch.put("username", username);
 			
-			//create a JSON Array and add the object cred with its key values to it
-			JSONArray security = new JSONArray();
-			security.add(cred);
+			//create a JSON Array and add the object branch with its key values to it
+			JSONArray array = new JSONArray();
+			array.add(branch);
 			
-			//add array to the credential object
-			credential.put("security", security);
+			//add array to the master object
+			master.put("array", array);
 
+			System.out.println();
 			//prints out json contents
-			System.out.println(credential.toString());
+			System.out.println("Prints out JSON after creation");
+			System.out.println(master.toString());
+			System.out.println();
 			
 			//create file to hold JSON
-			createFile(credential, security);
+			createFile(master, array);
 			
 }
 
-public static void createFile(JSONObject credential, JSONArray security){
+public static void createFile(JSONObject master, JSONArray array){
 	Scanner scanner = new Scanner(System.in);
-	//create a file
-	File file = new File("confidential.json");
 	
-	//nasty path: won't write anything to the file
+	//create a file, file is saved under workspace/CIT360
+	File file = new File("confidential.txt");
+	
+	//nasty path: won't write anything to the file, you have to close the printwriter for it to write to file
 	try {
 		PrintWriter write = new PrintWriter(file);
-		write.print(credential.toString());
+		write.print(master.toString());
 	} catch (FileNotFoundException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
@@ -110,7 +117,7 @@ public static void createFile(JSONObject credential, JSONArray security){
 	
 	//happy path: Will write to the file with paranthesis around it
 	try (PrintWriter write = new PrintWriter(file)){
-		write.print(credential.toJSONString());
+		write.print(master.toJSONString());
 	} catch (FileNotFoundException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
@@ -120,7 +127,7 @@ public static void createFile(JSONObject credential, JSONArray security){
 	//happy path: You have to close the printwriter for it to write to the file otherwise it won't
 	try {
 		PrintWriter write = new PrintWriter(file);
-		write.print(credential.toString());
+		write.print(master.toString());
 		write.close();
 	} catch (FileNotFoundException e) {
 		// TODO Auto-generated catch block
@@ -131,10 +138,10 @@ public static void createFile(JSONObject credential, JSONArray security){
 	    //pause the execution
 		System.out.println("File created successfully, Hit Return to display");
 		scanner.nextLine();
-		readFile(file, security);
+		readFile(file, array);
 }
 
-public static void readFile(File file, JSONArray security){
+public static void readFile(File file, JSONArray array){
 	Scanner scanner = new Scanner(System.in);
 	//read the file
 
@@ -148,34 +155,71 @@ public static void readFile(File file, JSONArray security){
 		while (scanner.hasNextLine()){
 			build.append(scanner.nextLine());
 		}
+		
+		System.out.println("Print contents of StringBuilder");
 		System.out.println(build.toString());
+		System.out.println();
 		
 		//parse json string
+		// a json parser provides read access to JSON data
 		JSONParser myParse = new JSONParser();
 		
-		JSONObject objsecure = (JSONObject) myParse.parse(build.toString());
+		//we parse the string using the parser and cast it to a JSON Object
+		JSONObject objmaster = (JSONObject) myParse.parse(build.toString());
 		
-		//nasty path: will print out null
-		//String user = (String) jsonObj.get("username");
-		//System.out.print(user);
+		//nasty path: will print out null because username is a key of an object within an array it can only
+		//be accessed through a JSONArray. The object looked for username but did not find it
+		//so it returns null
+		System.out.println("This is a nasty path");
+		String userTest = (String) objmaster.get("username");
+		System.out.print(userTest);
+		System.out.println();
 		
-		System.out.printf("Here we go!!! %s", objsecure.get("root").toString());
+		System.out.println();
+		
+		//This prints out the value we put in our master object. Because our master object is not buried in an array
+		//we can access it's key value pair.
+		System.out.printf("Generating username and password for %s", objmaster.get("root").toString());
+		System.out.println();
+		System.out.println("------------------------------------------------------------");
+		System.out.println();
+		System.out.println("Print out contents of the objmaster object");
+		System.out.println(objmaster.toString());
+		System.out.println();
 		
 		//nasty path does not work have to call the root object
 		//   System.out.printf("Here we go!!! %s", objsecure.get("username").toString());
 		
-		//cycle through the array
-		JSONArray myArray = (JSONArray) objsecure.get("security");
-		JSONObject test = (JSONObject) myArray.get(0);
-		String user = (String) test.get("username");
-		System.out.printf("Here we go!!! %s", user);
+		//If we want to access our object that has some of our key value pairs we need to create a new array and with
+		//our JSONObject we created before we need to get our array and cast it to a JSONArray to access the values found
+		//in it
+		JSONArray myArray = (JSONArray) objmaster.get("array");
 		
+		//with our JSONArray we grab the first element in the array. In this case it is our only element, which was
+		//our branch object at creation and we stick the object element in the array into it's own object
+		JSONObject test = (JSONObject) myArray.get(0);
+		
+		//We then create variables to hold our values from our object
+		String user = (String) test.get("username");
+		String pass = (String) test.get("password");
+		
+		//prints out the username and password from our branch object we created at creation
+		System.out.println("Your username is: " + user);
+		System.out.println("Your password is: " + pass);
+		
+		System.out.println();
+		
+		//This is just an example of printing out the information from a loop. If there are more than one element in
+		//the array we would do this.
+		String usernamein = null, passwordin = null;
 		for (int i = 0; i < myArray.size(); i++){
-			JSONObject myArray2 = (JSONObject) myArray.get(i);
-			String usernamein = (String) myArray2.get("username");
-			String passwordin = (String) myArray2.get("password");
-			System.out.printf("Username %s%s", usernamein, passwordin);
+			JSONObject branchobj = (JSONObject) myArray.get(i);
+			usernamein = (String) branchobj.get("username");
+			passwordin = (String) branchobj.get("password");
+			
 		}
+		System.out.println("Your username is: " + usernamein);
+		System.out.println("Your password is: " + passwordin);
 	
 	} catch (IOException e) {
 		// TODO Auto-generated catch block

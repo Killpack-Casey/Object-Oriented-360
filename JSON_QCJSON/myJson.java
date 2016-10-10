@@ -187,9 +187,6 @@ public static void readFile(File file, JSONArray array){
 		System.out.println(objmaster.toString());
 		System.out.println();
 		
-		//nasty path does not work have to call the root object
-		//   System.out.printf("Here we go!!! %s", objsecure.get("username").toString());
-		
 		//If we want to access our object that has some of our key value pairs we need to create a new array and with
 		//our JSONObject we created before we need to get our array and cast it to a JSONArray to access the values found
 		//in it
